@@ -1,39 +1,23 @@
-name: Sonar
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main # the name of your main branch
-  pull_request:
-    types: [opened, synchronize, reopened]
-jobs:
-  build:
-    name: Analysis
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Cache SonarQube packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.TEST_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.USER_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify sonar:sonar -Dmaven.test.failure.ignore=true
+# SonarQube server settings
+sonar.host.url=http://localhost:9000
+sonar.login=squ_938a621b64b06fdf4a244bf014e827fab29e14cd
+
+# Project settings
+sonar.projectKey=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
+sonar.projectName=Your Project Name
+sonar.projectVersion=1.0
+
+# Paths to sources and tests
+sonar.sources=src
+sonar.tests=tests
+sonar.test.inclusions=**/*.spec.js,**/*.test.js
+
+# Language
+sonar.language=js
+sonar.sourceEncoding=UTF-8
+
+# Optional: Coverage settings
+sonar.javascript.lcov.reportPaths=coverage/lcov-report/lcov.info
+
+# Optional: ESLint integration
+sonar.eslint.reportPaths=eslint-report.json
