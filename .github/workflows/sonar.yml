@@ -1,9 +1,10 @@
 # SonarQube server settings
-sonar.host.url=http://localhost:9000
+sonar.host.url=https://sonarcloud.io
+sonar.organization=dimid85-github
 sonar.login=squ_938a621b64b06fdf4a244bf014e827fab29e14cd
 
 # Project settings
-sonar.projectKey=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
+sonar.projectKey=Dimid85_mySonarDemo1
 sonar.projectName=mySonarDemo1
 sonar.projectVersion=1.0
 
