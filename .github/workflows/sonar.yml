@@ -1,24 +1,33 @@
-# SonarQube server settings
-sonar.host.url=https://sonarcloud.io
-sonar.organization=dimid85-github
-sonar.login=squ_938a621b64b06fdf4a244bf014e827fab29e14cd
+name: SonarQube Analysis
 
-# Project settings
-sonar.projectKey=Dimid85_mySonarDemo1
-sonar.projectName=mySonarDemo1
-sonar.projectVersion=1.0
+on:
+  push:
+    branches:
+      - main
 
-# Paths to sources and tests
-sonar.sources=src
-sonar.tests=tests
-sonar.test.inclusions=**/*.spec.js,**/*.test.js
+jobs:
+  sonarqube:
+    runs-on: ubuntu-latest
 
-# Language
-sonar.language=js
-sonar.sourceEncoding=UTF-8
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-# Optional: Coverage settings
-sonar.javascript.lcov.reportPaths=coverage/lcov-report/lcov.info
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
 
-# Optional: ESLint integration
-sonar.eslint.reportPaths=eslint-report.json
+    - name: Build and Test
+      run: |
+        npm install
+        npm run build
+        npm test
+
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v1
+      with:
+        sonar-token: ${{ secrets.USER_TOKEN }}
+        sonar-project-key: ${{ github.repository }}
+        sonar-github-token: ${{ secrets.TEST_TOKEN }}
+        sonar-organization: dimid85-github
